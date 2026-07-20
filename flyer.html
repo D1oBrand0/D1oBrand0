@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JMM Construction — Flyer (Print Ready)</title>
+<style>
+  :root{
+    --black:#0d0d0f; --panel:#17171b; --red:#e01e26; --red-dark:#b6161d;
+    --orange:#f26a1f; --white:#fff; --muted:#c9c9cf;
+    --font:"Arial",Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#3a3a3f;font-family:var(--font);padding:24px;display:flex;flex-direction:column;align-items:center;gap:28px;}
+
+  .toolbar{
+    width:4in;max-width:100%;background:#fff;border-radius:10px;padding:14px 16px;
+    font-size:13px;color:#222;box-shadow:0 6px 18px rgba(0,0,0,.3);
+  }
+  .toolbar b{color:#000;}
+  .toolbar button{
+    margin-top:10px;background:var(--red);color:#fff;border:0;border-radius:8px;
+    padding:9px 16px;font-weight:800;cursor:pointer;font-size:13px;
+  }
+  .toolbar a{color:var(--red-dark);font-weight:700;}
+
+  /* Postcard: 4in x 6in portrait */
+  .flyer{
+    width:4in;height:6in;position:relative;overflow:hidden;
+    background:var(--black);color:#fff;
+    box-shadow:0 14px 40px rgba(0,0,0,.5);
+    border:1px solid #000;
+  }
+  .flyer::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(300px 200px at 100% 0%, rgba(224,30,38,.35), transparent 60%),
+      radial-gradient(260px 220px at 0% 100%, rgba(242,106,31,.22), transparent 60%);
+    pointer-events:none;
+  }
+  .pad{position:relative;padding:0.28in;height:100%;display:flex;flex-direction:column;}
+
+  .logo{height:0.62in;margin-bottom:0.1in;}
+  .tag{color:var(--red);font-style:italic;font-weight:800;font-size:15px;margin:2px 0 8px;}
+  .intro{font-size:9.5px;color:var(--muted);line-height:1.45;margin-bottom:9px;}
+
+  .h{font-size:11px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;
+     color:#fff;border-left:4px solid var(--red);padding-left:8px;margin-bottom:7px;}
+
+  .services{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin-bottom:10px;}
+  .services li{font-size:10.5px;font-weight:700;padding-left:15px;position:relative;color:#f1f1f3;}
+  .services li::before{content:"";position:absolute;left:0;top:5px;width:8px;height:8px;
+     background:var(--red);transform:rotate(45deg);}
+
+  .pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:auto;}
+  .pill{font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+     background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);
+     border-radius:999px;padding:4px 8px;color:#eaeaec;}
+  .pill.red{background:var(--red);border-color:var(--red);}
+
+  .footerbar{display:flex;align-items:center;gap:10px;margin-top:10px;
+     border-top:1px solid rgba(255,255,255,.15);padding-top:10px;}
+  .contact{flex:1;min-width:0;}
+  .phone{font-size:21px;font-weight:900;color:#fff;letter-spacing:.5px;line-height:1;}
+  .callto{font-size:8.5px;font-weight:800;color:var(--orange);letter-spacing:1.5px;text-transform:uppercase;}
+  .cline{font-size:8.5px;color:var(--muted);margin-top:3px;word-break:break-all;}
+  .cline b{color:#fff;}
+
+  .qr{text-align:center;flex:none;}
+  .qr img{width:0.98in;height:0.98in;background:#fff;padding:3px;border-radius:6px;display:block;}
+  .qr span{display:block;font-size:7px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--orange);margin-top:3px;}
+
+  /* Back side specifics */
+  .badges{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 10px;}
+  .badge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);
+     border-radius:8px;padding:8px 9px;}
+  .badge b{display:block;font-size:11px;color:#fff;}
+  .badge small{font-size:8px;color:var(--muted);}
+  .guarantee{background:linear-gradient(135deg,var(--red-dark),#7a0f14);border:0;text-align:center;}
+  .guarantee b{font-size:14px;}
+  .scanbig{margin-top:auto;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.25);
+     border-radius:10px;padding:10px;display:flex;align-items:center;gap:12px;}
+  .scanbig img{width:1.15in;height:1.15in;background:#fff;padding:4px;border-radius:7px;flex:none;}
+  .scanbig .st b{font-size:13px;color:#fff;display:block;}
+  .scanbig .st small{font-size:9px;color:var(--muted);line-height:1.35;display:block;margin-top:3px;}
+  .scanbig .url{font-size:8px;color:var(--orange);font-weight:800;margin-top:5px;word-break:break-all;}
+
+  @media print{
+    body{background:#fff;padding:0;gap:0;}
+    .toolbar{display:none;}
+    .flyer{box-shadow:none;border:none;page-break-after:always;}
+    @page{size:4in 6in;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <b>JMM Construction — Print-Ready Flyer</b><br />
+    Two 4"×6" postcard sides below. To print: press <b>Print</b>, choose paper size <b>4×6 in</b> (or "Actual size"), enable <b>Background graphics</b>.
+    The QR code links to <a href="https://d1obrand0.github.io/d1obrand0/">d1obrand0.github.io/d1obrand0</a>.
+    <br /><button onclick="window.print()">🖨 Print Flyer</button>
+  </div>
+
+  <!-- ============ FRONT ============ -->
+  <div class="flyer">
+    <div class="pad">
+      <img class="logo" alt="JMM Construction" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgODQiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iSk1NIENvbnN0cnVjdGlvbiI+CiAgPCEtLSBIYXJkIGhhdCBlbWJsZW0gLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNiwxMCkiPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTAiIGZpbGw9IiNlMDFlMjYiLz4KICAgIDxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSI1OCIgaGVpZ2h0PSI1OCIgcng9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjg1Ii8+CiAgICA8IS0tIGhlbG1ldCAtLT4KICAgIDxwYXRoIGQ9Ik0xMiA0NGMwLTExIDgtMTkgMjAtMTlzMjAgOCAyMCAxOXYySDEyeiIgZmlsbD0iIzFhMWExYSIvPgogICAgPHBhdGggZD0iTTI4IDI2YzAtMyAyLTUgNC01czQgMiA0IDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8cmVjdCB4PSI4IiB5PSI0NiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjYiIHJ4PSIzIiBmaWxsPSIjMWExYTFhIi8+CiAgICA8cGF0aCBkPSJNMzAgMzBoNHYxNGgtNHoiIGZpbGw9IiNlMDFlMjYiLz4KICA8L2c+CiAgPCEtLSBXb3JkbWFyayAtLT4KICA8dGV4dCB4PSI4MiIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIGxldHRlci1zcGFjaW5nPSIxIj5KTU08L3RleHQ+CiAgPHRleHQgeD0iODMiIHk9IjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2UwMWUyNiIgbGV0dGVyLXNwYWNpbmc9IjMuNSI+Q09OU1RSVUNUSU9OPC90ZXh0Pgo8L3N2Zz4K" />
+      <div class="tag">Quality Work You Can Trust!</div>
+      <p class="intro">Professional subcontracting across NYC. Reliable, clean, and done right the first time — for general contractors, builders &amp; property owners. 24+ years of experience.</p>
+
+      <div class="h">We Specialize In</div>
+      <ul class="services">
+        <li>Carpentry</li>
+        <li>Tile</li>
+        <li>Concrete Work</li>
+        <li>Painting</li>
+        <li>Taping</li>
+        <li>Interior &amp; Exterior</li>
+      </ul>
+
+      <div class="pills">
+        <span class="pill red">Residential &amp; Commercial</span>
+        <span class="pill">Clean &amp; Professional</span>
+        <span class="pill">Honest &amp; Affordable</span>
+        <span class="pill">Free Estimates</span>
+      </div>
+
+      <div class="footerbar">
+        <div class="contact">
+          <div class="callto">Call for a Free Estimate</div>
+          <div class="phone">347-228-4257</div>
+          <div class="cline"><b>jmmconstructionnyc@gmail.com</b></div>
+          <div class="cline">@jmmconstructionnyc</div>
+        </div>
+        <div class="qr">
+          <img alt="Scan to visit our website" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAewAAAHsAQMAAAAq5AwjAAAABlBMVEURERH////YdsArAAACdklEQVR42u2dUWrEMAxERS/g+98yN3B3SSKN5JR+LJTKvFCWNOv5MS9mPJa9Nj+5DkOOHDly5P9fbn6N6+Hrxu/fDcbV/P1cGx9f9tGFHPnfyyvS8R69Pg9nO96s1Bjmkbdl/mT75Pm8eX91Yu8vwrE0hnnkGzDvbJ/fHncbs2RvYB75Lsyn57exKd4e5pFv5efFzCv2bunx88h3YF6imN//yG2Q92der2sa62Ze0sv4N6JOeh55V+ZXA+8+J7zNYRrvwDzyxszfSDvYPqQL3refEbcP88hbj/NXJp+HffU5OrFlnEe+wTivZsYkmXd7UxvDPPLOuY1iX0f7MavVN5hHvo+fD7bl20gp8yfMI+/LfNTYSKVZrcAZMZO9hfQ88p7eZk0m58MKVGAfy7X0PPK23mZOhX/JJE3LDyTAp+eRt/U25/09k3VXn2LMxe3APPK+uY1al3W99ee9JPQ88q7Me2J5wSwRZdTbeE2OL9TCPPKd/LwWG8hukcjzmcMi75zb1NKCI9n7tNlcd53DPPKm4/yTvUlPRt0bCPPI2+c2qULYSiF9rFJZKTam55F39TZpJ6zkNnUdVt4CmEfefZyvk1mzh60iegYUzCNvzbwl36Jz2OTqdZM4fh75BrmNmHadxpo9VCAwziPvndvoCpScZpls/MhmnnEeeWfmdY21DPu1OGFyphPyTc+3sbQ4ux5lCfPIe/t5dTgjnUv50IA1KeT9mVeXHkHljO2x62mWMI98D+ZTaUE+BuShAcwj34B5yz+1UM7lLtjDPPIt/HzhfF2lcp8P88g3yG2iil7r5GVlKpXWwzzynszz83PIkSNHvq/8GzqEey4XrGltAAAAAElFTkSuQmCC" />
+          <span>Scan Me</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BACK ============ -->
+  <div class="flyer">
+    <div class="pad">
+      <img class="logo" alt="JMM Construction" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgODQiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iSk1NIENvbnN0cnVjdGlvbiI+CiAgPCEtLSBIYXJkIGhhdCBlbWJsZW0gLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNiwxMCkiPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTAiIGZpbGw9IiNlMDFlMjYiLz4KICAgIDxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSI1OCIgaGVpZ2h0PSI1OCIgcng9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjg1Ii8+CiAgICA8IS0tIGhlbG1ldCAtLT4KICAgIDxwYXRoIGQ9Ik0xMiA0NGMwLTExIDgtMTkgMjAtMTlzMjAgOCAyMCAxOXYySDEyeiIgZmlsbD0iIzFhMWExYSIvPgogICAgPHBhdGggZD0iTTI4IDI2YzAtMyAyLTUgNC01czQgMiA0IDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8cmVjdCB4PSI4IiB5PSI0NiIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjYiIHJ4PSIzIiBmaWxsPSIjMWExYTFhIi8+CiAgICA8cGF0aCBkPSJNMzAgMzBoNHYxNGgtNHoiIGZpbGw9IiNlMDFlMjYiLz4KICA8L2c+CiAgPCEtLSBXb3JkbWFyayAtLT4KICA8dGV4dCB4PSI4MiIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIGxldHRlci1zcGFjaW5nPSIxIj5KTU08L3RleHQ+CiAgPHRleHQgeD0iODMiIHk9IjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYuNSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2UwMWUyNiIgbGV0dGVyLXNwYWNpbmc9IjMuNSI+Q09OU1RSVUNUSU9OPC90ZXh0Pgo8L3N2Zz4K" />
+      <div class="h" style="margin-top:2px;">Home Remodeling &amp; Construction</div>
+      <p class="intro" style="margin-top:4px;">Interior &amp; Exterior Services — quality craftsmanship you can rely on, backed by 24+ years of experience serving New York City.</p>
+
+      <div class="badges">
+        <div class="badge"><b>Licensed &amp; Insured</b><small>NYC DCA Licensed Contractor</small></div>
+        <div class="badge"><b>Free Estimate</b><small>No cost, no pressure</small></div>
+        <div class="badge guarantee"><b>100% Job Guarantee</b><small>We stand behind our work</small></div>
+        <div class="badge"><b>All 5 Boroughs</b><small>&amp; the Tri-State Area</small></div>
+      </div>
+
+      <div class="h">Trades We Handle</div>
+      <ul class="services">
+        <li>Carpentry &amp; Framing</li>
+        <li>Tile (Floor &amp; Wall)</li>
+        <li>Concrete Work</li>
+        <li>Interior/Ext. Painting</li>
+        <li>Drywall Taping</li>
+        <li>Wood Flooring</li>
+      </ul>
+
+      <div class="scanbig">
+        <img alt="Scan to visit our website" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAewAAAHsAQMAAAAq5AwjAAAABlBMVEURERH////YdsArAAACdklEQVR42u2dUWrEMAxERS/g+98yN3B3SSKN5JR+LJTKvFCWNOv5MS9mPJa9Nj+5DkOOHDly5P9fbn6N6+Hrxu/fDcbV/P1cGx9f9tGFHPnfyyvS8R69Pg9nO96s1Bjmkbdl/mT75Pm8eX91Yu8vwrE0hnnkGzDvbJ/fHncbs2RvYB75Lsyn57exKd4e5pFv5efFzCv2bunx88h3YF6imN//yG2Q92der2sa62Ze0sv4N6JOeh55V+ZXA+8+J7zNYRrvwDzyxszfSDvYPqQL3refEbcP88hbj/NXJp+HffU5OrFlnEe+wTivZsYkmXd7UxvDPPLOuY1iX0f7MavVN5hHvo+fD7bl20gp8yfMI+/LfNTYSKVZrcAZMZO9hfQ88p7eZk0m58MKVGAfy7X0PPK23mZOhX/JJE3LDyTAp+eRt/U25/09k3VXn2LMxe3APPK+uY1al3W99ee9JPQ88q7Me2J5wSwRZdTbeE2OL9TCPPKd/LwWG8hukcjzmcMi75zb1NKCI9n7tNlcd53DPPKm4/yTvUlPRt0bCPPI2+c2qULYSiF9rFJZKTam55F39TZpJ6zkNnUdVt4CmEfefZyvk1mzh60iegYUzCNvzbwl36Jz2OTqdZM4fh75BrmNmHadxpo9VCAwziPvndvoCpScZpls/MhmnnEeeWfmdY21DPu1OGFyphPyTc+3sbQ4ux5lCfPIe/t5dTgjnUv50IA1KeT9mVeXHkHljO2x62mWMI98D+ZTaUE+BuShAcwj34B5yz+1UM7lLtjDPPIt/HzhfF2lcp8P88g3yG2iil7r5GVlKpXWwzzynszz83PIkSNHvq/8GzqEey4XrGltAAAAAElFTkSuQmCC" />
+        <div class="st">
+          <b>Scan to Visit Our Website</b>
+          <small>See all our services, photos &amp; request a free estimate online.</small>
+          <div class="url">d1obrand0.github.io/d1obrand0</div>
+        </div>
+      </div>
+
+      <div class="footerbar">
+        <div class="contact">
+          <div class="callto">Call Today</div>
+          <div class="phone">347-228-4257</div>
+        </div>
+        <div class="qr" style="text-align:right;">
+          <div class="cline" style="text-align:right;"><b>jmmconstructionnyc@gmail.com</b></div>
+          <div class="cline" style="text-align:right;">@jmmconstructionnyc</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
