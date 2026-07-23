@@ -22,18 +22,17 @@ Marketing website for **JMM Construction**, a NYC subcontractor specializing in
 
 ## Deploying the website (GitHub Pages)
 
-The site is built to live at **`https://d1obrand0.github.io/d1obrand0/`** — this is
-the address the flyer's QR code points to.
+The code is already on the `main` branch. The site is built to live at
+**`https://d1obrand0.github.io/d1obrand0/`** — the address the flyer's QR code
+points to. You just need to switch Pages on once (only the repo owner can do this):
 
-To publish it:
+1. Go to the repo on GitHub → **Settings** → **Pages**.
+2. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+3. Set **Branch = `main`** and folder **`/ (root)`**, then click **Save**.
+4. Wait ~1 minute, then visit `https://d1obrand0.github.io/d1obrand0/`.
 
-1. Merge this branch into your default branch (`main`), **or** in the repo go to
-   **Settings → Pages** and set **Source = Deploy from a branch**, then pick this
-   branch and the `/ (root)` folder.
-2. A GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) will also
-   auto-deploy on every push to `main`. The first time, enable Pages under
-   **Settings → Pages → Source = GitHub Actions**.
-3. Wait ~1 minute, then visit `https://d1obrand0.github.io/d1obrand0/`.
+That's it — no build step needed; the files are served as-is (the `.nojekyll`
+file makes sure the `assets/` folder is published untouched).
 
 > If you later move to a custom domain (e.g. `jmmconstructionnyc.com`), regenerate
 > the QR code to point at the new address (see below) and reprint the flyers.
