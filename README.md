@@ -23,13 +23,13 @@ Marketing website for **JMM Construction**, a NYC subcontractor specializing in
 ## Deploying the website (GitHub Pages)
 
 The code is already on the `main` branch. The site is built to live at
-**`https://d1obrand0.github.io/d1obrand0/`** — the address the flyer's QR code
+**`https://d1obrand0.github.io/D1oBrand0/`** — the address the flyer's QR code
 points to. You just need to switch Pages on once (only the repo owner can do this):
 
 1. Go to the repo on GitHub → **Settings** → **Pages**.
 2. Under **Build and deployment → Source**, choose **Deploy from a branch**.
 3. Set **Branch = `main`** and folder **`/ (root)`**, then click **Save**.
-4. Wait ~1 minute, then visit `https://d1obrand0.github.io/d1obrand0/`.
+4. Wait ~1 minute, then visit `https://d1obrand0.github.io/D1oBrand0/`.
 
 That's it — no build step needed; the files are served as-is (the `.nojekyll`
 file makes sure the `assets/` folder is published untouched).
