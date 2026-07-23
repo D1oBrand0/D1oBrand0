@@ -390,8 +390,15 @@ textarea { resize: vertical; }
   .fab { display: grid; }
   .contact__form { grid-template-columns: 1fr; }
   .checklist { grid-template-columns: 1fr; }
+  /* Center the hero on phones and keep the big headline inside the screen */
+  .hero__inner { text-align: center; margin: 0 auto; max-width: 100%; }
+  .hero__title { font-size: clamp(2.2rem, 9vw, 3.4rem); letter-spacing: .5px; }
+  .hero__sub { margin-left: auto; margin-right: auto; }
+  .hero__cta { justify-content: center; }
+  .hero__badges { justify-content: center; }
 }
 @media (max-width: 480px) {
   .grid--services, .grid--why { grid-template-columns: 1fr; }
   .hero { padding: 64px 0 60px; }
+  .hero__title { font-size: clamp(1.5rem, 8vw, 2.3rem); letter-spacing: 0; }
 }
